@@ -3,365 +3,497 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluación: La Problemática Ambiental (Ecología)</title>
+    <title>Unidad 12: Legislación Ambiental Salvadoreña</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            color: #333;
-        }
-        .quiz-container {
-            background-color: #fff;
             padding: 20px;
-            margin: 20px 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 800px;
+        }
+        h1, h2 {
+            text-align: center;
         }
         .question {
-            margin-bottom: 15px;
+            margin: 20px 0;
         }
-        .options {
-            list-style-type: none;
-            padding: 0;
-        }
-        .options li {
+        .question label {
+            font-weight: bold;
+            display: block;
             margin-bottom: 10px;
         }
-        button {
+        .question .options {
+            margin-left: 20px;
+        }
+        .question .options input {
+            margin-right: 10px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .popup-content input {
+            margin-bottom: 20px;
+            padding: 15px;
+            width: 80%;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .popup-content button {
+            padding: 15px 30px;
             background-color: #28a745;
             color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
             font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        button:hover {
-            background-color: #218838;
-        }
-        #results {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-        footer {
-            background-color: #333;
+        button.submit-btn {
+            padding: 15px 30px;
+            background-color: #007bff;
             color: #fff;
-            padding: 10px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
             width: 100%;
             text-align: center;
-            position: fixed;
-            bottom: 0;
+        }
+        button.submit-btn:hover {
+            background-color: #0056b3;
+        }
+        #timer {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>Evaluación: La Problemática Ambiental (Ecología)</h1>
-    <div class="quiz-container">
-        <div id="quiz"></div>
-        <button id="submit">Enviar respuestas</button>
-        <div id="results"></div>
+
+<div class="popup" id="popup">
+    <div class="popup-content">
+        <h2>Complete la siguiente información</h2>
+        <input type="text" id="nombre" placeholder="Nombre Completo" required>
+        <input type="text" id="nie" placeholder="NIE" required>
+        <button onclick="validatePopup()">Continuar</button>
     </div>
-    <footer>
-        &copy; Derechos Reservados Prof. Alberto Sanchez
-    </footer>
-    <script>
-        const quizData = [
-            {
-                question: "¿Qué es la contaminación del aire?",
-                answers: [
-                    { text: "La introducción de sustancias nocivas en la atmósfera.", correct: true },
-                    { text: "La purificación del aire.", correct: false },
-                    { text: "La mejora de la calidad del agua.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es el efecto invernadero?",
-                answers: [
-                    { text: "El calentamiento de la superficie terrestre debido a la acumulación de gases en la atmósfera.", correct: true },
-                    { text: "El enfriamiento de la superficie terrestre.", correct: false },
-                    { text: "La reducción de gases en la atmósfera.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es el cambio climático?",
-                answers: [
-                    { text: "Un cambio significativo en los patrones climáticos a largo plazo.", correct: true },
-                    { text: "Un cambio a corto plazo en el clima.", correct: false },
-                    { text: "Una estabilización del clima.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la deforestación?",
-                answers: [
-                    { text: "La eliminación de grandes áreas de bosques.", correct: true },
-                    { text: "La plantación de nuevos árboles.", correct: false },
-                    { text: "La conservación de bosques existentes.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la biodiversidad?",
-                answers: [
-                    { text: "La variedad de vida en un área específica.", correct: true },
-                    { text: "La cantidad de contaminación en un área.", correct: false },
-                    { text: "La cantidad de recursos naturales en un área.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la desertificación?",
-                answers: [
-                    { text: "La degradación de la tierra en áreas áridas, semiáridas y subhúmedas secas.", correct: true },
-                    { text: "La expansión de los bosques.", correct: false },
-                    { text: "La mejora de la calidad del suelo.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la contaminación del agua?",
-                answers: [
-                    { text: "La introducción de sustancias nocivas en cuerpos de agua.", correct: true },
-                    { text: "La purificación de cuerpos de agua.", correct: false },
-                    { text: "La conservación de cuerpos de agua.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es el desarrollo sostenible?",
-                answers: [
-                    { text: "El desarrollo que satisface las necesidades del presente sin comprometer la capacidad de las futuras generaciones para satisfacer sus propias necesidades.", correct: true },
-                    { text: "El desarrollo que agota los recursos naturales.", correct: false },
-                    { text: "El desarrollo que aumenta la contaminación.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es el reciclaje?",
-                answers: [
-                    { text: "El proceso de convertir residuos en nuevos productos.", correct: true },
-                    { text: "El proceso de desechar residuos.", correct: false },
-                    { text: "El proceso de incinerar residuos.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la energía renovable?",
-                answers: [
-                    { text: "La energía que se obtiene de fuentes naturales y que se puede reponer a una tasa igual o mayor a la de su consumo.", correct: true },
-                    { text: "La energía que se obtiene de combustibles fósiles.", correct: false },
-                    { text: "La energía que se obtiene de la energía nuclear.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la huella de carbono?",
-                answers: [
-                    { text: "La medida de la cantidad total de gases de efecto invernadero producidos por actividades humanas.", correct: true },
-                    { text: "La cantidad de carbono almacenado en los océanos.", correct: false },
-                    { text: "La cantidad de carbono en la atmósfera.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la sobrepesca?",
-                answers: [
-                    { text: "La captura de peces a una tasa mayor que la de su reproducción.", correct: true },
-                    { text: "La conservación de especies marinas.", correct: false },
-                    { text: "La regulación de la pesca.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la pérdida de hábitat?",
-                answers: [
-                    { text: "La destrucción o alteración del entorno natural de una especie.", correct: true },
-                    { text: "La conservación de hábitats naturales.", correct: false },
-                    { text: "La creación de hábitats artificiales.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la acidificación de los océanos?",
-                answers: [
-                    { text: "El aumento de la acidez en los océanos debido a la absorción de dióxido de carbono.", correct: true },
-                    { text: "La disminución de la acidez en los océanos.", correct: false },
-                    { text: "La conservación de la biodiversidad marina.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es el agotamiento de la capa de ozono?",
-                answers: [
-                    { text: "La disminución de la concentración de ozono en la estratosfera.", correct: true },
-                    { text: "El aumento de la concentración de ozono en la troposfera.", correct: false },
-                    { text: "La estabilización de la capa de ozono.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es el manejo de residuos sólidos?",
-                answers: [
-                    { text: "El control y tratamiento de la basura generada por actividades humanas.", correct: true },
-                    { text: "La eliminación de residuos líquidos.", correct: false },
-                    { text: "La conservación de los recursos naturales.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la contaminación lumínica?",
-                answers: [
-                    { text: "La introducción de luz artificial en el ambiente natural.", correct: true },
-                    { text: "La reducción de la cantidad de luz en las ciudades.", correct: false },
-                    { text: "La mejora de la calidad del aire.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la contaminación acústica?",
-                answers: [
-                    { text: "El exceso de ruido en el ambiente que afecta la calidad de vida.", correct: true },
-                    { text: "La eliminación de ruido en las ciudades.", correct: false },
-                    { text: "La mejora de la calidad del agua.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es el impacto ambiental?",
-                answers: [
-                    { text: "El efecto de las actividades humanas sobre el medio ambiente.", correct: true },
-                    { text: "La conservación del medio ambiente.", correct: false },
-                    { text: "La mejora de la calidad del aire.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es un área protegida?",
-                answers: [
-                    { text: "Una región designada para la conservación de la biodiversidad y los recursos naturales.", correct: true },
-                    { text: "Una región designada para la agricultura intensiva.", correct: false },
-                    { text: "Una región designada para la explotación de recursos naturales.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la contaminación del suelo?",
-                answers: [
-                    { text: "La presencia de sustancias tóxicas en el suelo.", correct: true },
-                    { text: "La purificación del suelo.", correct: false },
-                    { text: "La mejora de la calidad del suelo.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la erosión del suelo?",
-                answers: [
-                    { text: "El desgaste y transporte de la capa superior del suelo por el viento, el agua o la actividad humana.", correct: true },
-                    { text: "La conservación de la capa superior del suelo.", correct: false },
-                    { text: "La mejora de la calidad del suelo.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la capa de ozono?",
-                answers: [
-                    { text: "Una capa de la estratosfera que contiene una alta concentración de ozono y protege la Tierra de la radiación ultravioleta.", correct: true },
-                    { text: "Una capa de la troposfera que contiene una alta concentración de ozono.", correct: false },
-                    { text: "Una capa de la atmósfera que contiene una alta concentración de dióxido de carbono.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es la deforestación?",
-                answers: [
-                    { text: "La eliminación de grandes áreas de bosques.", correct: true },
-                    { text: "La conservación de bosques existentes.", correct: false },
-                    { text: "La plantación de nuevos árboles.", correct: false }
-                ]
-            },
-            {
-                question: "¿Qué es el efecto de borde?",
-                answers: [
-                    { text: "El impacto de los cambios ambientales en los límites de los hábitats fragmentados.", correct: true },
-                    { text: "El impacto de los cambios ambientales en el interior de los hábitats.", correct: false },
-                    { text: "La conservación de los hábitats naturales.", correct: false }
-                ]
-            }
-        ];
+</div>
 
-        let attempt = 0;
-        const maxAttempts = 3;
+<div class="container" id="evaluation" style="display:none;">
+    <h1>Unidad 12: Legislación Ambiental Salvadoreña</h1>
+    <div id="timer">Tiempo restante: 30:00</div>
 
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
+    <!-- Indicador 12.1 -->
+    <h2>Indicador 12.1: Título I de la Ley de Medio Ambiente en El Salvador</h2>
+    <div class="question">
+        <label>1. ¿Qué establece el Título I de la Ley de Medio Ambiente en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q1" value="correcto" required> A. Los principios generales de la protección del medio ambiente.</label><br>
+            <label><input type="radio" name="q1" value="incorrecto" required> B. Las sanciones por violaciones ambientales.</label><br>
+            <label><input type="radio" name="q1" value="incorrecto" required> C. Los requisitos para la explotación de recursos naturales.</label><br>
+            <label><input type="radio" name="q1" value="incorrecto" required> D. Los procedimientos para la denuncia de delitos ambientales.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>2. ¿Cuál es el objetivo principal del Título I de la Ley de Medio Ambiente?</label>
+        <div class="options">
+            <label><input type="radio" name="q2" value="correcto" required> A. Establecer las bases para la preservación y restauración del medio ambiente.</label><br>
+            <label><input type="radio" name="q2" value="incorrecto" required> B. Regular la explotación minera.</label><br>
+            <label><input type="radio" name="q2" value="incorrecto" required> C. Promover el desarrollo industrial sin restricciones.</label><br>
+            <label><input type="radio" name="q2" value="incorrecto" required> D. Definir los límites de las áreas protegidas.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>3. ¿Qué importancia tiene el Título I en la gestión ambiental de El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q3" value="correcto" required> A. Es fundamental para la creación de políticas ambientales coherentes.</label><br>
+            <label><input type="radio" name="q3" value="incorrecto" required> B. Es irrelevante para la gestión de recursos naturales.</label><br>
+            <label><input type="radio" name="q3" value="incorrecto" required> C. Solo se aplica a la protección de la fauna silvestre.</label><br>
+            <label><input type="radio" name="q3" value="incorrecto" required> D. Es una sección opcional de la ley que no requiere cumplimiento estricto.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>4. ¿Cómo contribuye el Título I de la Ley de Medio Ambiente a la sostenibilidad en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q4" value="correcto" required> A. Promoviendo la gestión sostenible de los recursos naturales.</label><br>
+            <label><input type="radio" name="q4" value="incorrecto" required> B. Impulsando la urbanización masiva sin control ambiental.</label><br>
+            <label><input type="radio" name="q4" value="incorrecto" required> C. Fomentando la explotación indiscriminada de minerales.</label><br>
+            <label><input type="radio" name="q4" value="incorrecto" required> D. Estableciendo impuestos a la importación de productos agrícolas.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>5. ¿Qué rol juega el Título I de la Ley de Medio Ambiente en la protección de la biodiversidad en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q5" value="correcto" required> A. Establece las bases legales para la conservación de la biodiversidad.</label><br>
+            <label><input type="radio" name="q5" value="incorrecto" required> B. Se enfoca exclusivamente en la producción agrícola.</label><br>
+            <label><input type="radio" name="q5" value="incorrecto" required> C. Limita la exportación de especies nativas.</label><br>
+            <label><input type="radio" name="q5" value="incorrecto" required> D. No tiene relación directa con la biodiversidad.</label>
+        </div>
+    </div>
+
+    <!-- Indicador 12.2 -->
+    <h2>Indicador 12.2: Importancia del Corredor Biológico Mesoamericano</h2>
+    <div class="question">
+        <label>6. ¿Qué es el Corredor Biológico Mesoamericano?</label>
+        <div class="options">
+            <label><input type="radio" name="q6" value="correcto" required> A. Una iniciativa de conservación que conecta áreas protegidas desde México hasta Panamá.</label><br>
+            <label><input type="radio" name="q6" value="incorrecto" required> B. Un proyecto de infraestructura para mejorar la conectividad de carreteras en Centroamérica.</label><br>
+            <label><input type="radio" name="q6" value="incorrecto" required> C. Un programa de reforestación en El Salvador.</label><br>
+            <label><input type="radio" name="q6" value="incorrecto" required> D. Una red de áreas urbanas planificadas en la región centroamericana.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>7. ¿Cuál es uno de los principales objetivos del Corredor Biológico Mesoamericano?</label>
+        <div class="options">
+            <label><input type="radio" name="q7" value="correcto" required> A. Facilitar el movimiento y la dispersión de especies entre áreas protegidas.</label><br>
+            <label><input type="radio" name="q7" value="incorrecto" required> B. Promover el turismo masivo en áreas rurales.</label><br>
+            <label><input type="radio" name="q7" value="incorrecto" required> C. Desarrollar infraestructura para la expansión agrícola.</label><br>
+            <label><input type="radio" name="q7" value="incorrecto" required> D. Incrementar la producción industrial en la región.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>8. ¿Por qué es importante el Corredor Biológico Mesoamericano para la biodiversidad?</label>
+        <div class="options">
+            <label><input type="radio" name="q8" value="correcto" required> A. Permite la conexión entre hábitats, lo que es crucial para la supervivencia de muchas especies.</label><br>
+            <label><input type="radio" name="q8" value="incorrecto" required> B. Fomenta la urbanización en zonas rurales.</label><br>
+            <label><input type="radio" name="q8" value="incorrecto" required> C. Reduce la necesidad de conservación al concentrar los esfuerzos en un solo país.</label><br>
+            <label><input type="radio" name="q8" value="incorrecto" required> D. Limita la movilidad de especies para evitar la competencia.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>9. ¿Cómo contribuye el Corredor Biológico Mesoamericano a la mitigación del cambio climático?</label>
+        <div class="options">
+            <label><input type="radio" name="q9" value="correcto" required> A. Promoviendo la conservación de bosques, que actúan como sumideros de carbono.</label><br>
+            <label><input type="radio" name="q9" value="incorrecto" required> B. Aumentando la deforestación para el desarrollo agrícola.</label><br>
+            <label><input type="radio" name="q9" value="incorrecto" required> C. Fomentando la expansión de la ganadería intensiva.</label><br>
+            <label><input type="radio" name="q9" value="incorrecto" required> D. Apoyando la construcción de zonas industriales en áreas naturales.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>10. ¿Qué impacto tiene el Corredor Biológico Mesoamericano en las comunidades locales?</label>
+        <div class="options">
+            <label><input type="radio" name="q10" value="correcto" required> A. Fomenta el desarrollo sostenible y el ecoturismo, beneficiando a las comunidades locales.</label><br>
+            <label><input type="radio" name="q10" value="incorrecto" required> B. Desplaza a las comunidades locales para crear áreas protegidas.</label><br>
+            <label><input type="radio" name="q10" value="incorrecto" required> C. Limita el acceso a los recursos naturales para las comunidades indígenas.</label><br>
+            <label><input type="radio" name="q10" value="incorrecto" required> D. Promueve la agricultura intensiva en áreas protegidas.</label>
+        </div>
+    </div>
+
+    <!-- Indicador 12.3 -->
+    <h2>Indicador 12.3: Capítulos I-IV de la Ley de Áreas Naturales Protegidas (ANP)</h2>
+    <div class="question">
+        <label>11. ¿Cuál es el objetivo principal del Capítulo I de la Ley de Áreas Naturales Protegidas?</label>
+        <div class="options">
+            <label><input type="radio" name="q11" value="correcto" required> A. Establecer las disposiciones generales para la protección y conservación de las ANP.</label><br>
+            <label><input type="radio" name="q11" value="incorrecto" required> B. Definir los procedimientos para la explotación de recursos en las ANP.</label><br>
+            <label><input type="radio" name="q11" value="incorrecto" required> C. Promover la urbanización de las ANP.</label><br>
+            <label><input type="radio" name="q11" value="incorrecto" required> D. Regular la construcción de infraestructuras en las ANP.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>12. ¿Qué establece el Capítulo II de la Ley de Áreas Naturales Protegidas?</label>
+        <div class="options">
+            <label><input type="radio" name="q12" value="correcto" required> A. Las categorías de manejo de las áreas protegidas.</label><br>
+            <label><input type="radio" name="q12" value="incorrecto" required> B. Los incentivos fiscales para la conservación.</label><br>
+            <label><input type="radio" name="q12" value="incorrecto" required> C. Las sanciones por la explotación ilegal de recursos.</label><br>
+            <label><input type="radio" name="q12" value="incorrecto" required> D. Los derechos de las comunidades locales dentro de las ANP.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>13. ¿Qué rol juegan las categorías de manejo en la protección de las Áreas Naturales Protegidas según el Capítulo II?</label>
+        <div class="options">
+            <label><input type="radio" name="q13" value="correcto" required> A. Definen el nivel de intervención permitido en cada área para garantizar su conservación.</label><br>
+            <label><input type="radio" name="q13" value="incorrecto" required> B. Determinan las áreas donde se puede realizar minería.</label><br>
+            <label><input type="radio" name="q13" value="incorrecto" required> C. Regulan el uso de pesticidas en las zonas agrícolas cercanas.</label><br>
+            <label><input type="radio" name="q13" value="incorrecto" required> D. Promueven la explotación sostenible de recursos en todas las ANP.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>14. ¿Qué establece el Capítulo III de la Ley de Áreas Naturales Protegidas?</label>
+        <div class="options">
+            <label><input type="radio" name="q14" value="correcto" required> A. Los mecanismos de financiamiento para la gestión de las ANP.</label><br>
+            <label><input type="radio" name="q14" value="incorrecto" required> B. Los procedimientos para la denuncia de actividades ilegales en las ANP.</label><br>
+            <label><input type="radio" name="q14" value="incorrecto" required> C. La creación de nuevos parques nacionales.</label><br>
+            <label><input type="radio" name="q14" value="incorrecto" required> D. La implementación de programas educativos en las ANP.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>15. ¿Cómo contribuye el Capítulo IV de la Ley de Áreas Naturales Protegidas a la conservación de la biodiversidad?</label>
+        <div class="options">
+            <label><input type="radio" name="q15" value="correcto" required> A. Estableciendo las bases para la cooperación internacional en la gestión de las ANP.</label><br>
+            <label><input type="radio" name="q15" value="incorrecto" required> B. Promoviendo la explotación sostenible de recursos naturales.</label><br>
+            <label><input type="radio" name="q15" value="incorrecto" required> C. Fomentando la urbanización de áreas cercanas a las ANP.</label><br>
+            <label><input type="radio" name="q15" value="incorrecto" required> D. Regulando el comercio de especies exóticas.</label>
+        </div>
+    </div>
+
+    <!-- Indicador 12.4 -->
+    <h2>Indicador 12.4: Capítulos I-IV de la Ley Forestal en El Salvador</h2>
+    <div class="question">
+        <label>16. ¿Cuál es el propósito principal del Capítulo I de la Ley Forestal en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q16" value="correcto" required> A. Establecer las disposiciones generales para la protección y manejo sostenible de los recursos forestales.</label><br>
+            <label><input type="radio" name="q16" value="incorrecto" required> B. Regular la exportación de productos forestales.</label><br>
+            <label><input type="radio" name="q16" value="incorrecto" required> C. Fomentar la deforestación controlada.</label><br>
+            <label><input type="radio" name="q16" value="incorrecto" required> D. Definir las zonas agrícolas aptas para la reforestación.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>17. ¿Qué establece el Capítulo II de la Ley Forestal sobre la conservación de los bosques?</label>
+        <div class="options">
+            <label><input type="radio" name="q17" value="correcto" required> A. Define las medidas necesarias para la conservación y restauración de los bosques.</label><br>
+            <label><input type="radio" name="q17" value="incorrecto" required> B. Promueve la explotación intensiva de los recursos forestales.</label><br>
+            <label><input type="radio" name="q17" value="incorrecto" required> C. Establece incentivos fiscales para la tala de árboles.</label><br>
+            <label><input type="radio" name="q17" value="incorrecto" required> D. Limita el acceso a los bosques para las comunidades indígenas.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>18. ¿Qué importancia tiene el Capítulo III de la Ley Forestal en la gestión de recursos forestales?</label>
+        <div class="options">
+            <label><input type="radio" name="q18" value="correcto" required> A. Es fundamental para regular el aprovechamiento sostenible de los recursos forestales.</label><br>
+            <label><input type="radio" name="q18" value="incorrecto" required> B. Promueve la tala indiscriminada de árboles.</label><br>
+            <label><input type="radio" name="q18" value="incorrecto" required> C. Se enfoca únicamente en la producción de madera.</label><br>
+            <label><input type="radio" name="q18" value="incorrecto" required> D. No tiene un impacto directo en la gestión de recursos forestales.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>19. ¿Qué establece el Capítulo IV de la Ley Forestal sobre la reforestación?</label>
+        <div class="options">
+            <label><input type="radio" name="q19" value="correcto" required> A. Fomenta la reforestación como una medida clave para la restauración ecológica.</label><br>
+            <label><input type="radio" name="q19" value="incorrecto" required> B. Limita la reforestación a áreas urbanas.</label><br>
+            <label><input type="radio" name="q19" value="incorrecto" required> C. Promueve la reforestación solo para la producción de madera.</label><br>
+            <label><input type="radio" name="q19" value="incorrecto" required> D. Prohíbe la reforestación en áreas protegidas.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>20. ¿Cómo contribuye la Ley Forestal a la mitigación del cambio climático en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q20" value="correcto" required> A. Promoviendo la conservación y reforestación de bosques, que actúan como sumideros de carbono.</label><br>
+            <label><input type="radio" name="q20" value="incorrecto" required> B. Incentivando la expansión agrícola en áreas forestales.</label><br>
+            <label><input type="radio" name="q20" value="incorrecto" required> C. Facilitando la tala de árboles para el desarrollo urbano.</label><br>
+            <label><input type="radio" name="q20" value="incorrecto" required> D. Fomentando la construcción de carreteras en áreas boscosas.</label>
+        </div>
+    </div>
+
+    <!-- Indicador 12.5 -->
+    <h2>Indicador 12.5: Función del Servicio de Parques Nacionales y Vida Silvestre</h2>
+    <div class="question">
+        <label>21. ¿Cuál es la función principal del Servicio de Parques Nacionales y Vida Silvestre en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q21" value="correcto" required> A. Administrar y proteger las áreas naturales y la vida silvestre.</label><br>
+            <label><input type="radio" name="q21" value="incorrecto" required> B. Promover la urbanización de los parques nacionales.</label><br>
+            <label><input type="radio" name="q21" value="incorrecto" required> C. Facilitar la explotación comercial de recursos naturales en áreas protegidas.</label><br>
+            <label><input type="radio" name="q21" value="incorrecto" required> D. Desarrollar infraestructura turística en áreas silvestres.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>22. ¿Qué importancia tiene el Servicio de Parques Nacionales y Vida Silvestre para la conservación en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q22" value="correcto" required> A. Es crucial para preservar la biodiversidad y los ecosistemas del país.</label><br>
+            <label><input type="radio" name="q22" value="incorrecto" required> B. Se enfoca principalmente en la expansión de áreas urbanas.</label><br>
+            <label><input type="radio" name="q22" value="incorrecto" required> C. Facilita la tala de árboles para proyectos de infraestructura.</label><br>
+            <label><input type="radio" name="q22" value="incorrecto" required> D. Promueve la agricultura intensiva en áreas protegidas.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>23. ¿Cómo apoya el Servicio de Parques Nacionales y Vida Silvestre a las comunidades locales?</label>
+        <div class="options">
+            <label><input type="radio" name="q23" value="correcto" required> A. Promoviendo el ecoturismo y el uso sostenible de los recursos naturales.</label><br>
+            <label><input type="radio" name="q23" value="incorrecto" required> B. Desplazando a las comunidades para expandir las áreas protegidas.</label><br>
+            <label><input type="radio" name="q23" value="incorrecto" required> C. Limita el acceso a los recursos naturales de las comunidades.</label><br>
+            <label><input type="radio" name="q23" value="incorrecto" required> D. Fomentando la agricultura extensiva en áreas protegidas.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>24. ¿Qué rol juega el Servicio de Parques Nacionales en la educación ambiental?</label>
+        <div class="options">
+            <label><input type="radio" name="q24" value="correcto" required> A. Desarrolla programas educativos para concienciar sobre la conservación y el medio ambiente.</label><br>
+            <label><input type="radio" name="q24" value="incorrecto" required> B. Se enfoca en la promoción de actividades comerciales en parques nacionales.</label><br>
+            <label><input type="radio" name="q24" value="incorrecto" required> C. Organiza eventos de reforestación sin involucrar a las comunidades locales.</label><br>
+            <label><input type="radio" name="q24" value="incorrecto" required> D. Facilita la explotación de recursos naturales con fines educativos.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>25. ¿Cómo contribuye el Servicio de Parques Nacionales y Vida Silvestre a la mitigación del cambio climático?</label>
+        <div class="options">
+            <label><input type="radio" name="q25" value="correcto" required> A. Conservando y restaurando áreas naturales que actúan como sumideros de carbono.</label><br>
+            <label><input type="radio" name="q25" value="incorrecto" required> B. Promoviendo la deforestación controlada en parques nacionales.</label><br>
+            <label><input type="radio" name="q25" value="incorrecto" required> C. Facilitando la explotación de recursos naturales para proyectos energéticos.</label><br>
+            <label><input type="radio" name="q25" value="incorrecto" required> D. Incentivando la expansión agrícola en áreas protegidas.</label>
+        </div>
+    </div>
+
+    <!-- Indicador 12.6 -->
+    <h2>Indicador 12.6: Objetivos de la Ley de Conservación de la Vida Silvestre</h2>
+    <div class="question">
+        <label>26. ¿Cuál es el objetivo principal de la Ley de Conservación de la Vida Silvestre en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q26" value="correcto" required> A. Proteger y conservar la vida silvestre y sus hábitats.</label><br>
+            <label><input type="radio" name="q26" value="incorrecto" required> B. Promover la caza regulada de especies en peligro.</label><br>
+            <label><input type="radio" name="q26" value="incorrecto" required> C. Facilitar la comercialización de productos de vida silvestre.</label><br>
+            <label><input type="radio" name="q26" value="incorrecto" required> D. Desarrollar infraestructura turística en áreas silvestres.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>27. ¿Qué importancia tiene la Ley de Conservación de la Vida Silvestre para la biodiversidad en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q27" value="correcto" required> A. Es fundamental para garantizar la protección de especies en peligro de extinción.</label><br>
+            <label><input type="radio" name="q27" value="incorrecto" required> B. Permite la caza de especies protegidas con fines comerciales.</label><br>
+            <label><input type="radio" name="q27" value="incorrecto" required> C. Se enfoca en la reforestación de áreas urbanas.</label><br>
+            <label><input type="radio" name="q27" value="incorrecto" required> D. Facilita la tala de bosques para el desarrollo agrícola.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>28. ¿Cómo apoya la Ley de Conservación de la Vida Silvestre la restauración de hábitats?</label>
+        <div class="options">
+            <label><input type="radio" name="q28" value="correcto" required> A. Promoviendo proyectos de restauración ecológica en áreas degradadas.</label><br>
+            <label><input type="radio" name="q28" value="incorrecto" required> B. Facilitando la urbanización de áreas naturales.</label><br>
+            <label><input type="radio" name="q28" value="incorrecto" required> C. Incentivando la deforestación controlada para la agricultura.</label><br>
+            <label><input type="radio" name="q28" value="incorrecto" required> D. Promoviendo la explotación comercial de recursos naturales.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>29. ¿Qué mecanismos establece la Ley de Conservación de la Vida Silvestre para proteger las especies en peligro?</label>
+        <div class="options">
+            <label><input type="radio" name="q29" value="correcto" required> A. Prohibición de la caza y el comercio de especies protegidas.</label><br>
+            <label><input type="radio" name="q29" value="incorrecto" required> B. Promoción de la caza regulada para el control de poblaciones.</label><br>
+            <label><input type="radio" name="q29" value="incorrecto" required> C. Incentivos fiscales para la explotación de fauna silvestre.</label><br>
+            <label><input type="radio" name="q29" value="incorrecto" required> D. Licencias especiales para la caza de especies en peligro.</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <label>30. ¿Cómo contribuye la Ley de Conservación de la Vida Silvestre a la educación ambiental en El Salvador?</label>
+        <div class="options">
+            <label><input type="radio" name="q30" value="correcto" required> A. Estableciendo programas educativos sobre la importancia de la vida silvestre y su conservación.</label><br>
+            <label><input type="radio" name="q30" value="incorrecto" required> B. Facilitando la explotación comercial de recursos naturales.</label><br>
+            <label><input type="radio" name="q30" value="incorrecto" required> C. Promoviendo el turismo masivo en áreas silvestres.</label><br>
+            <label><input type="radio" name="q30" value="incorrecto" required> D. Incentivando la agricultura intensiva en áreas protegidas.</label>
+        </div>
+    </div>
+
+    <button class="submit-btn" onclick="calculateGrade()">Obtener Calificación</button>
+</div>
+
+<div class="popup" id="finalPopup" style="display: none;">
+    <div class="popup-content">
+        <h2>Resultado de la Evaluación</h2>
+        <p id="nombreFinal"></p>
+        <p id="nieFinal"></p>
+        <p id="gradeFinal"></p>
+        <button onclick="closePopup()">Cerrar</button>
+    </div>
+</div>
+
+<script>
+    const authorizedNIEs = [
+        "4839280", "19711634", "4839293", "6297544", "19711644",
+        "3850927", "19711635", "4267835", "3293986", "19711278",
+        "19711637", "4267839", "19806177", "4839298", "4267832",
+        "4267843", "4839279", "4839301", "19964688"
+    ];
+
+    let timer;
+    let totalSeconds = 1800;
+
+    window.onload = function() {
+        document.getElementById('popup').style.display = 'flex';
+    };
+
+    function validatePopup() {
+        const nombre = document.getElementById('nombre').value;
+        const nie = document.getElementById('nie').value;
+
+        if (nombre === "" || nie === "") {
+            alert("Por favor, complete todos los campos.");
+        } else if (!authorizedNIEs.includes(nie)) {
+            alert("NIE no autorizado.");
+        } else {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('evaluation').style.display = 'block';
+            startTimer();
         }
+    }
 
-        function loadQuiz() {
-            const quizContainer = document.getElementById('quiz');
-            quizContainer.innerHTML = '';
-            quizData.forEach((data, index) => {
-                const questionContainer = document.createElement('div');
-                questionContainer.className = 'question';
+    function startTimer() {
+        timer = setInterval(function() {
+            totalSeconds--;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            document.getElementById('timer').textContent = `Tiempo restante: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-                const questionTitle = document.createElement('h3');
-                questionTitle.innerText = `${index + 1}. ${data.question}`;
-                questionContainer.appendChild(questionTitle);
-
-                const optionsList = document.createElement('ul');
-                optionsList.className = 'options';
-
-                shuffle(data.answers).forEach(answer => {
-                    const option = document.createElement('li');
-                    const optionLabel = document.createElement('label');
-                    const optionInput = document.createElement('input');
-                    optionInput.type = 'radio';
-                    optionInput.name = `question${index}`;
-                    optionInput.value = answer.correct;
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.appendChild(document.createTextNode(answer.text));
-                    option.appendChild(optionLabel);
-                    optionsList.appendChild(option);
-                });
-
-                questionContainer.appendChild(optionsList);
-                quizContainer.appendChild(questionContainer);
-            });
-        }
-
-        function submitQuiz() {
-            if (attempt >= maxAttempts) {
-                alert('Has alcanzado el número máximo de intentos.');
-                return;
+            if (totalSeconds <= 0) {
+                clearInterval(timer);
+                calculateGrade();
             }
+        }, 1000);
+    }
 
-            const resultsContainer = document.getElementById('results');
-            const answers = document.querySelectorAll('input[type="radio"]:checked');
-            let score = 0;
+    function calculateGrade() {
+        const totalQuestions = document.querySelectorAll('.question').length;
+        const correctAnswers = document.querySelectorAll('input[type="radio"]:checked[value="correcto"]').length;
+        const maxPoints = 10;
+        const grade = (correctAnswers / totalQuestions) * maxPoints;
 
-            quizData.forEach((data, index) => {
-                const selected = answers[index] ? answers[index].value === 'true' : null;
-                if (selected === true) {
-                    score += 0.4; // Cada respuesta correcta vale 0.4 puntos
-                }
-            });
+        document.getElementById('nombreFinal').textContent = "Nombre: " + document.getElementById('nombre').value;
+        document.getElementById('nieFinal').textContent = "NIE: " + document.getElementById('nie').value;
+        document.getElementById('gradeFinal').textContent = "Su calificación es: " + grade.toFixed(2) + " de " + maxPoints;
 
-            score = Math.round(score * 10) / 10; // Redondear a un decimal
-            let feedback = quizData.map((data, index) => {
-                const selected = answers[index] ? answers[index].value === 'true' : null;
-                let result;
-                if (selected === null) {
-                    result = "No contestada";
-                } else if (selected === true) {
-                    result = "Correcta";
-                } else {
-                    result = "Incorrecta";
-                }
-                return `<p>${index + 1}. ${result}</p>`;
-            }).join("");
+        document.getElementById('finalPopup').style.display = 'flex';
+    }
 
-            resultsContainer.innerHTML = `<h3>Resultados:</h3><p>Puntaje: ${score} / 10</p>${feedback}`;
+    function closePopup() {
+        document.getElementById('finalPopup').style.display = 'none';
+    }
+</script>
 
-            attempt++;
-            if (attempt >= maxAttempts) {
-                alert('Has alcanzado el número máximo de intentos.');
-            }
-        }
-
-        document.getElementById('submit').addEventListener('click', submitQuiz);
-
-        loadQuiz();
-    </script>
 </body>
 </html>
